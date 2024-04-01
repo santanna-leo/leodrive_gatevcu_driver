@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(leodrive_gatevcu_driver)
+project(leodrive_gatevcu_adapter)
 
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
@@ -18,7 +18,7 @@ ament_auto_add_library(vcu_sender SHARED
 )
 
 rclcpp_components_register_node(vcu_sender
-        PLUGIN "leodrive_gatevcu_driver::VcuSender"
+        PLUGIN "leodrive_gatevcu_adapter::VcuSender"
         EXECUTABLE vcu_sender_node
 )
 
@@ -27,7 +27,7 @@ if (BUILD_TESTING)
     ament_lint_auto_find_test_dependencies()
 endif ()
 
-ament_package(
+ament_auto_package(
         #        INSTALL_TO_SHARE
         #        launch
         #        config
