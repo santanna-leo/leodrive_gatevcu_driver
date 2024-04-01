@@ -13,6 +13,12 @@ include_directories(
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+rosidl_generate_interfaces(${PROJECT_NAME}
+        "msg/SteeringWheel.msg"
+        DEPENDENCIES std_msgs
+        ADD_LINTER_TESTS
+)
+
 ament_auto_add_library(vcu_sender SHARED
         src/vcu_sender.cpp
 )
