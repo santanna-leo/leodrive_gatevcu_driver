@@ -19,11 +19,7 @@ VcuSender::VcuSender(const rclcpp::NodeOptions & options) : Node{"vcu_sender", o
 
 void VcuSender::steering_callback(const SteeringMsg & msg)
 {
-  CanFrame can_frame{};
-  can_frame.header.frame_id = frame_id;
-  can_frame.header.stamp = now();
-  can_frame.is_rtr = false;
-  can_frame.is_error = false;
+  auto can_frame = create_frame();
 
   FrontWheelCommands_t cmds{};
   cmds.set_steering_wheel_angle_ro = msg.angle;
@@ -38,11 +34,7 @@ void VcuSender::steering_callback(const SteeringMsg & msg)
 
 void VcuSender::longitudinal_callback(const LongitudinalMsg & msg)
 {
-  CanFrame can_frame{};
-  can_frame.header.frame_id = frame_id;
-  can_frame.header.stamp = now();
-  can_frame.is_rtr = false;
-  can_frame.is_error = false;
+  auto can_frame = create_frame();
 
   LongitudinalCommandsV2_t cmds{};
   cmds.set_gas_pedal_pos_ro = msg.gas_pedal;
@@ -53,6 +45,16 @@ void VcuSender::longitudinal_callback(const LongitudinalMsg & msg)
     reinterpret_cast<uint8_t *>(&can_frame.is_extended));
 
   can_frame_pub_->publish(can_frame);
+}
+
+CanFrame VcuSender::create_frame()
+{
+  CanFrame can_frame{};
+  can_frame.header.frame_id = frame_id;
+  can_frame.header.stamp = now();
+  can_frame.is_rtr = false;
+  can_frame.is_error = false;
+  return can_frame;
 }
 
 }  // namespace leodrive_gatevcu_adapter

@@ -18,6 +18,7 @@ class VcuSender : public rclcpp::Node
 {
 public:
   explicit VcuSender(const rclcpp::NodeOptions & options);
+  CanFrame create_frame();
   void steering_callback(const SteeringMsg & msg);
   void longitudinal_callback(const LongitudinalMsg & msg);
 
