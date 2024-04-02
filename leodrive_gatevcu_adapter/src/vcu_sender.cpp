@@ -26,7 +26,7 @@ void VcuSender::steering_callback(const SteeringMsg & msg)
   auto can_frame = create_frame();
 
   FrontWheelCommands_t cmds{};
-  cmds.set_steering_wheel_angle_ro = msg.angle;
+  cmds.set_steering_wheel_angle_phys = msg.angle;
   cmds.set_steering_wheel_torque = msg.torque;
 
   can_frame.id = Pack_FrontWheelCommands_drivedb(
@@ -41,8 +41,8 @@ void VcuSender::longitudinal_callback(const LongitudinalMsg & msg)
   auto can_frame = create_frame();
 
   LongitudinalCommandsV2_t cmds{};
-  cmds.set_gas_pedal_pos_ro = msg.gas_pedal;
-  cmds.set_brake_force_ro = msg.brake_pedal;
+  cmds.set_gas_pedal_pos_phys = msg.gas_pedal;
+  cmds.set_brake_force_phys = msg.brake_pedal;
 
   can_frame.id = Pack_LongitudinalCommandsV2_drivedb(
     &cmds, can_frame.data.data(), &can_frame.dlc,
