@@ -10,6 +10,8 @@ namespace leodrive_gatevcu_adapter
 using CanFrame = can_msgs::msg::Frame;
 using SteeringMsg = leodrive_gatevcu_msgs::msg::SteeringWheel;
 
+constexpr std::string_view frame_id{"can"};
+
 class VcuSender : public rclcpp::Node
 {
 public:

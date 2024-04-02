@@ -16,7 +16,7 @@ VcuSender::VcuSender(const rclcpp::NodeOptions & options) : Node{"vcu_sender", o
 void VcuSender::steering_callback(const SteeringMsg & msg)
 {
   CanFrame can_frame{};
-  can_frame.header.frame_id = "can";
+  can_frame.header.frame_id = frame_id;
   can_frame.header.stamp = now();
   can_frame.is_rtr = false;
   can_frame.is_error = false;
