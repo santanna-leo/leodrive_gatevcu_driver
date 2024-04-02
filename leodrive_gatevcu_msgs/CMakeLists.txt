@@ -12,6 +12,7 @@ ament_auto_find_build_dependencies()
 rosidl_generate_interfaces(${PROJECT_NAME}
         "msg/SteeringWheel.msg"
         "msg/Longitudinal.msg"
+        "msg/Vehicle.msg"
         DEPENDENCIES std_msgs
         ADD_LINTER_TESTS
 )
