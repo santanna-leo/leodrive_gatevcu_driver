@@ -15,6 +15,10 @@ VcuSender::VcuSender(const rclcpp::NodeOptions & options) : Node{"vcu_sender", o
   longitudinal_sub_ = create_subscription<LongitudinalMsg>(
     "longitudinal", rclcpp::SensorDataQoS(),
     std::bind(&VcuSender::longitudinal_callback, this, std::placeholders::_1));
+
+  vehicle_sub_ = create_subscription<VehicleMsg>(
+    "vehicle", rclcpp::SensorDataQoS(),
+    std::bind(&VcuSender::vehicle_callback, this, std::placeholders::_1));
 }
 
 void VcuSender::steering_callback(const SteeringMsg & msg)
@@ -41,6 +45,27 @@ void VcuSender::longitudinal_callback(const LongitudinalMsg & msg)
   cmds.set_brake_force_ro = msg.brake_pedal;
 
   can_frame.id = Pack_LongitudinalCommandsV2_drivedb(
+    &cmds, can_frame.data.data(), &can_frame.dlc,
+    reinterpret_cast<uint8_t *>(&can_frame.is_extended));
+
+  can_frame_pub_->publish(can_frame);
+}
+
+void VcuSender::vehicle_callback(const leodrive_gatevcu_msgs::msg::Vehicle & msg)
+{
+  auto can_frame = create_frame();
+
+  VehicleCommands_t cmds{};
+  cmds.blinker = msg.blinker;
+  cmds.headlgiht = msg.head_light;
+  cmds.wiper = msg.wiper;
+  cmds.gear = msg.gear;
+  cmds.mode = msg.mode;
+  cmds.hand_brake = msg.hand_brake;
+  cmds.TakeoverRequest = msg.takeover_request;
+  cmds.Long_mode = msg.long_mode;
+
+  can_frame.id = Pack_VehicleCommands_drivedb(
     &cmds, can_frame.data.data(), &can_frame.dlc,
     reinterpret_cast<uint8_t *>(&can_frame.is_extended));
 
