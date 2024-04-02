@@ -6,17 +6,30 @@ VcuSender::VcuSender(const rclcpp::NodeOptions & options) : Node{"vcu_sender", o
 {
   RCLCPP_INFO_STREAM(get_logger(), "Hello");
 
-  can_frame_pub_ = create_publisher<can_msgs::msg::Frame>("/to_can_bus", rclcpp::SensorDataQoS());
+  can_frame_pub_ = create_publisher<CanFrame>("/to_can_bus", 500);
 
-  steering_sub_ = create_subscription<leodrive_gatevcu_msgs::msg::SteeringWheel>(
+  steering_sub_ = create_subscription<SteeringMsg>(
     "steering_wheel", rclcpp::SensorDataQoS(),
     std::bind(&VcuSender::steering_callback, this, std::placeholders::_1));
 }
 
-void VcuSender::steering_callback(const leodrive_gatevcu_msgs::msg::SteeringWheel & msg)
+void VcuSender::steering_callback(const SteeringMsg & msg)
 {
-  RCLCPP_INFO_STREAM(get_logger(), "Angle: " << msg.angle);
-  RCLCPP_INFO_STREAM(get_logger(), "Torque: " << msg.torque);
+  CanFrame can_frame{};
+  can_frame.header.frame_id = "can";
+  can_frame.header.stamp = now();
+  can_frame.is_rtr = false;
+  can_frame.is_error = false;
+
+  FrontWheelCommands_t cmds{};
+  cmds.set_steering_wheel_angle_ro = msg.angle;
+  cmds.set_steering_wheel_torque = msg.torque;
+
+  can_frame.id = Pack_FrontWheelCommands_drivedb(
+    &cmds, can_frame.data.data(), &can_frame.dlc,
+    reinterpret_cast<uint8_t *>(&can_frame.is_extended));
+
+  can_frame_pub_->publish(can_frame);
 }
 
 }  // namespace leodrive_gatevcu_adapter
