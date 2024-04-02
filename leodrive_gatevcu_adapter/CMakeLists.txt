@@ -13,9 +13,17 @@ include_directories(
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+ament_auto_add_library(can_interface SHARED
+        src/can_interface/drivedb.c
+        src/can_interface/drivedb-fmon.c
+        src/can_interface/drivedb-binutil.c
+)
+
 ament_auto_add_library(vcu_sender SHARED
         src/vcu_sender.cpp
 )
+
+target_link_libraries(vcu_sender can_interface)
 
 rclcpp_components_register_node(vcu_sender
         PLUGIN "leodrive_gatevcu_adapter::VcuSender"
