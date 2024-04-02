@@ -10,7 +10,8 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-        "../leodrive_gatevcu_msgs/msg/SteeringWheel.msg"
+        "msg/SteeringWheel.msg"
+        "msg/Longitudinal.msg"
         DEPENDENCIES std_msgs
         ADD_LINTER_TESTS
 )
