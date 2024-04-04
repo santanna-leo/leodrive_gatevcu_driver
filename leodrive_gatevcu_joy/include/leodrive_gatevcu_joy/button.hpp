@@ -10,7 +10,7 @@ constexpr std::chrono::milliseconds hold_duration{200};
 class Button
 {
 public:
-  Button(rclcpp::Node & node);
+  explicit Button(rclcpp::Node & node);
   void update_input(const bool & is_pressed);
   void tick();
 
