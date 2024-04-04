@@ -50,11 +50,17 @@ void Button::tick()
       break;
     case PressChangeState::RELEASED:
       RCLCPP_INFO_STREAM(node_.get_logger(), "        Released");
-      current_press_change_state_ = PressChangeState::IDLE;
       if (current_button_state_ != ButtonState::HOLD) {
-        RCLCPP_INFO_STREAM(node_.get_logger(), "current_button_state_: " << static_cast<std::underlying_type<ButtonState>::type>(current_button_state_));
+        RCLCPP_INFO_STREAM(
+          node_.get_logger(),
+          "current_button_state_: "
+            << static_cast<std::underlying_type<ButtonState>::type>(current_button_state_));
         current_button_state_ = ButtonState::CLICK;
+        break;
       }
+      current_press_change_state_ = PressChangeState::IDLE;
+      current_button_state_ = ButtonState::IDLE;
+
       break;
     case PressChangeState::IDLE:
       // RCLCPP_INFO_STREAM(node_.get_logger(), "        IDLEEEE");
@@ -67,14 +73,9 @@ void Button::tick()
       current_button_state_ = ButtonState::IDLE;
       current_press_change_state_ = PressChangeState::IDLE;
       current_press_state_ = PressState::NOT_PRESSED;
-
       break;
     case ButtonState::HOLD:
       RCLCPP_INFO_STREAM(node_.get_logger(), "  ***** Hold");
-      current_button_state_ = ButtonState::IDLE;
-      current_press_change_state_ = PressChangeState::IDLE;
-      current_press_state_ = PressState::NOT_PRESSED;
-
       break;
     case ButtonState::IDLE:
 
