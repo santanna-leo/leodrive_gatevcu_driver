@@ -49,16 +49,26 @@ void Button::tick()
 
   switch (current_button_state_) {
     case ButtonState::CLICK:
-      RCLCPP_INFO_STREAM(node_.get_logger(), "  ----- Click");
+      on_click_();
       current_button_state_ = ButtonState::IDLE;
       current_press_change_state_ = PressChangeState::IDLE;
       break;
     case ButtonState::HOLD:
-      RCLCPP_INFO_STREAM(node_.get_logger(), "  ***** Hold");
+      on_hold_();
       break;
     case ButtonState::IDLE:
       break;
   }
+}
+
+void Button::on_click(const std::function<void()> & function)
+{
+  on_click_ = function;
+}
+
+void Button::on_hold(const std::function<void()> & function)
+{
+  on_hold_ = function;
 }
 
 }  // namespace leodrive_gatevcu_joy

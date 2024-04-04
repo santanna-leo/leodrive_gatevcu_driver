@@ -11,6 +11,9 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options)
     "/joy", 10, std::bind(&VcuJoyHandler::joy_callback, this, std::placeholders::_1));
   state_machine_timer_ = create_wall_timer(
     rclcpp::Rate(100).period(), std::bind(&VcuJoyHandler::state_machine_callback, this));
+
+  btn_.on_click([this]() { RCLCPP_INFO_STREAM(this->get_logger(), "Clicked."); });
+  btn_.on_hold([this]() { RCLCPP_INFO_STREAM(this->get_logger(), "Holded."); });
 }
 
 void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
