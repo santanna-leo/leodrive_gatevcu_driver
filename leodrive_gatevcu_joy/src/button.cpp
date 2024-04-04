@@ -32,14 +32,14 @@ void Button::tick()
 
   if (current_press_state_ == PressState::PRESSING) {
     const auto delta_time = node_.now() - *press_time_;
-    if (delta_time > hold_duration) {
+    if (delta_time > hold_duration && current_button_state_ != ButtonState::HOLDING) {
       current_button_state_ = ButtonState::HOLD;
       current_press_change_state_ = PressChangeState::IDLE;
     }
   }
 
   if (current_press_change_state_ == PressChangeState::RELEASED) {
-    if (current_button_state_ != ButtonState::HOLD) {
+    if (current_button_state_ != ButtonState::HOLDING) {
       current_button_state_ = ButtonState::CLICK;
     } else {
       current_button_state_ = ButtonState::IDLE;
@@ -55,8 +55,10 @@ void Button::tick()
       break;
     case ButtonState::HOLD:
       on_hold_();
+      current_button_state_ = ButtonState::HOLDING;
       break;
     case ButtonState::IDLE:
+    case ButtonState::HOLDING:
       break;
   }
 }

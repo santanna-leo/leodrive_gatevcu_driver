@@ -22,7 +22,7 @@ private:
 
   enum class PressState { NOT_PRESSED, PRESSING };
   enum class PressChangeState { IDLE, PRESSED, RELEASED };
-  enum class ButtonState { IDLE, CLICK, HOLD };
+  enum class ButtonState { IDLE, CLICK, HOLD, HOLDING };
   PressState current_press_state_{PressState::NOT_PRESSED};
   PressChangeState current_press_change_state_{PressChangeState::IDLE};
   ButtonState current_button_state_{ButtonState::IDLE};
