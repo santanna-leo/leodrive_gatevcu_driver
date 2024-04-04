@@ -2,7 +2,8 @@
 
 namespace leodrive_gatevcu_joy
 {
-VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_sender", options}
+VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options)
+: Node{"vcu_sender", options}, btn_(*this)
 {
   RCLCPP_INFO_STREAM(get_logger(), "Hello");
 
@@ -14,10 +15,12 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
 
 void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
 {
+  btn_.update_input(msg.buttons[0] > 0);
 }
 
 void VcuJoyHandler::state_machine_callback()
 {
+  btn_.tick();
 }
 
 }  // namespace leodrive_gatevcu_joy

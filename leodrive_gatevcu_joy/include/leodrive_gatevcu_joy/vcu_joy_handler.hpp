@@ -1,3 +1,4 @@
+#include "leodrive_gatevcu_joy/button.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include "sensor_msgs/msg/joy.hpp"
@@ -16,6 +17,8 @@ private:
 
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
   rclcpp::TimerBase::SharedPtr state_machine_timer_;
+
+  Button btn_;
 };
 
 }  // namespace leodrive_gatevcu_joy
