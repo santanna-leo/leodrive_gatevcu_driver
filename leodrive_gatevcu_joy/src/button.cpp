@@ -28,6 +28,8 @@ void Button::update_input(const bool & is_pressed)
 
 void Button::tick()
 {
+  if (!press_time_.has_value()) return;
+
   if (current_press_state_ == PressState::PRESSING) {
     const auto delta_time = node_.now() - *press_time_;
     if (delta_time > hold_duration) {
@@ -40,8 +42,8 @@ void Button::tick()
     if (current_button_state_ != ButtonState::HOLD) {
       current_button_state_ = ButtonState::CLICK;
     } else {
-      current_press_change_state_ = PressChangeState::IDLE;
       current_button_state_ = ButtonState::IDLE;
+      current_press_change_state_ = PressChangeState::IDLE;
     }
   }
 
@@ -50,7 +52,6 @@ void Button::tick()
       RCLCPP_INFO_STREAM(node_.get_logger(), "  ----- Click");
       current_button_state_ = ButtonState::IDLE;
       current_press_change_state_ = PressChangeState::IDLE;
-      current_press_state_ = PressState::NOT_PRESSED;
       break;
     case ButtonState::HOLD:
       RCLCPP_INFO_STREAM(node_.get_logger(), "  ***** Hold");
