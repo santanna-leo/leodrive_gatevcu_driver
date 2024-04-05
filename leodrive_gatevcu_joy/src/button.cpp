@@ -8,9 +8,14 @@ Button::Button(gamepad_button gamepad_button)
 {
 }
 
+Button::Button(gamepad_axes_button gamepad_axes_button)
+: logger_{rclcpp::get_logger("button")}, gamepad_axes_button_{gamepad_axes_button}
+{
+}
+
 void Button::update_input(const sensor_msgs::msg::Joy & joy_msg)
 {
-  const bool is_pressed = joy_msg.buttons[gamepad_button_] > 0;
+  const bool is_pressed = check_pressed(joy_msg);
 
   switch (current_press_state_) {
     case PressState::NOT_PRESSED:
@@ -88,13 +93,27 @@ void Button::set_log_fields(std::string_view field_name, uint8_t * field)
   field_ = field;
 }
 
+bool Button::check_pressed(const sensor_msgs::msg::Joy & msg)
+{
+  if (gamepad_button_.has_value()) {
+    return msg.buttons[*gamepad_button_] > 0;
+  } else {
+    switch (*gamepad_axes_button_) {
+      case gamepad_axes_button::UP_BUTTON:
+        return msg.axes[7] > 0;
+      case gamepad_axes_button::DOWN_BUTTON:
+        return msg.axes[7] < 0;
+    }
+  }
+  return false;
+}
+
 void Button::log_status()
 {
   RCLCPP_INFO(
-    logger_, "%s (%s): %d", button_to_string(gamepad_button_).c_str(), field_name_.c_str(),
+    logger_, "%s (%s): %d", button_to_string(*gamepad_button_).c_str(), field_name_.c_str(),
     *field_);
 }
-
 std::string Button::button_to_string(gamepad_button button)
 {
   switch (button) {

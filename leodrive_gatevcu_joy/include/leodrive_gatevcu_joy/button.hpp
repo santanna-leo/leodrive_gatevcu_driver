@@ -26,10 +26,13 @@ enum gamepad_button {
   RIGHT_JOYSTICK_BUTTON
 };
 
+enum gamepad_axes_button { UP_BUTTON, DOWN_BUTTON };
+
 class Button
 {
 public:
   explicit Button(gamepad_button gamepad_button);
+  explicit Button(gamepad_axes_button gamepad_axes_button);
   void update_input(const sensor_msgs::msg::Joy & joy_msg);
   void tick();
   void on_click(const std::function<void()> & function);
@@ -37,12 +40,15 @@ public:
   void set_log_fields(std::string_view field_name, uint8_t * field);
 
 private:
+  bool check_pressed(const sensor_msgs::msg::Joy & msg);
   void log_status();
   static std::string button_to_string(gamepad_button button);
 
   rclcpp::Logger logger_;
 
-  gamepad_button gamepad_button_;
+  std::optional<gamepad_button> gamepad_button_;
+  std::optional<gamepad_axes_button> gamepad_axes_button_;
+
   std::optional<std::chrono::time_point<clock>> press_time_;
 
   enum class PressState { NOT_PRESSED, PRESSING };
