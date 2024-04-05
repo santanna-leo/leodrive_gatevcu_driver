@@ -47,6 +47,12 @@ void VcuJoyHandler::register_buttons()
       vehicle_msg_.mode = VehicleMsg::MODE_OFF;
   });
   button_handler_.add_button(mode);
+
+  Button handbrake{gamepad::SQUARE_BUTTON};
+  handbrake.set_log_fields("handbrake", &vehicle_msg_.hand_brake);
+  handbrake.on_click([this]() { vehicle_msg_.hand_brake = VehicleMsg::HANDBRAKE_PULL; });
+  handbrake.on_hold([this]() { vehicle_msg_.hand_brake = VehicleMsg::HANDBRAKE_RELEASE; });
+  button_handler_.add_button(handbrake);
 }
 
 }  // namespace leodrive_gatevcu_joy
