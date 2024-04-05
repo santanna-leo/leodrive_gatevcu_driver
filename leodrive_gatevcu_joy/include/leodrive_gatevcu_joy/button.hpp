@@ -9,15 +9,16 @@ namespace leodrive_gatevcu_joy
 
 using clock = std::chrono::system_clock;
 constexpr std::chrono::milliseconds hold_duration{200};
-enum gamepad {
+
+enum gamepad_button {
   X_BUTTON,
   CIRCLE_BUTTON,
   TRIANGLE_BUTTON,
   SQUARE_BUTTON,
   LEFT_BUTTON,
   RIGHT_BUTTON,
-  LEFT_TRIGGER,
-  RIGHT_TRIGGER,
+  LEFT_TRIGGER_BUTTON,
+  RIGHT_TRIGGER_BUTTON,
   SHARE_BUTTON,
   OPTIONS_BUTTON,
   PS4_BUTTON,
@@ -28,7 +29,7 @@ enum gamepad {
 class Button
 {
 public:
-  explicit Button(gamepad gamepadButton);
+  explicit Button(gamepad_button gamepad_button);
   void update_input(const sensor_msgs::msg::Joy & joy_msg);
   void tick();
   void on_click(const std::function<void()> & function);
@@ -37,11 +38,11 @@ public:
 
 private:
   void log_status();
-  static std::string button_to_string(gamepad button);
+  static std::string button_to_string(gamepad_button button);
 
   rclcpp::Logger logger_;
 
-  gamepad gamepad_button_;
+  gamepad_button gamepad_button_;
   std::optional<std::chrono::time_point<clock>> press_time_;
 
   enum class PressState { NOT_PRESSED, PRESSING };

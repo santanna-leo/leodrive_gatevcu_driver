@@ -3,7 +3,7 @@
 namespace leodrive_gatevcu_joy
 {
 
-Button::Button(gamepad gamepad_button)
+Button::Button(gamepad_button gamepad_button)
 : logger_{rclcpp::get_logger("button")}, gamepad_button_{gamepad_button}
 {
 }
@@ -95,7 +95,7 @@ void Button::log_status()
     *field_);
 }
 
-std::string Button::button_to_string(gamepad button)
+std::string Button::button_to_string(gamepad_button button)
 {
   switch (button) {
     case X_BUTTON:
@@ -110,9 +110,9 @@ std::string Button::button_to_string(gamepad button)
       return "Left Button";
     case RIGHT_BUTTON:
       return "Right Button";
-    case LEFT_TRIGGER:
+    case LEFT_TRIGGER_BUTTON:
       return "Left Trigger Button";
-    case RIGHT_TRIGGER:
+    case RIGHT_TRIGGER_BUTTON:
       return "Right Trigger Button";
     case SHARE_BUTTON:
       return "Share Button";
