@@ -24,6 +24,7 @@ void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
 void VcuJoyHandler::state_machine_callback()
 {
   button_handler_.tick();
+  vehicle_pub_->publish(vehicle_msg_);
 }
 
 void VcuJoyHandler::register_buttons()
