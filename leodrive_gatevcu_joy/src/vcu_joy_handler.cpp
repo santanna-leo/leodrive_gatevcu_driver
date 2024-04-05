@@ -12,13 +12,8 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
     rclcpp::Rate(100).period(), std::bind(&VcuJoyHandler::state_machine_callback, this));
 
   vehicle_pub_ = create_publisher<VehicleMsg>("vehicle", rclcpp::SensorDataQoS());
-  VehicleMsg vehicle_msg{};
 
-  Button myButton{gamepad::CIRCLE_BUTTON};
-  myButton.on_click([this]() { RCLCPP_INFO_STREAM(this->get_logger(), "My click."); });
-  myButton.on_hold([this]() { RCLCPP_INFO_STREAM(this->get_logger(), "My hold."); });
-
-  button_handler_.add_button(myButton);
+  register_buttons();
 }
 
 void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
@@ -29,6 +24,20 @@ void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
 void VcuJoyHandler::state_machine_callback()
 {
   button_handler_.tick();
+}
+
+void VcuJoyHandler::register_buttons()
+{
+  Button wiper{gamepad::X_BUTTON};
+  wiper.on_click([this]() {
+    if (vehicle_msg_.wiper == VehicleMsg::WIPER_OFF)
+      vehicle_msg_.wiper = VehicleMsg::WIPER_ON;
+    else
+      vehicle_msg_.wiper = VehicleMsg::WIPER_OFF;
+
+    RCLCPP_INFO(this->get_logger(), "%s (%s): %d", "X button", "wiper", vehicle_msg_.wiper);
+  });
+  button_handler_.add_button(wiper);
 }
 
 }  // namespace leodrive_gatevcu_joy

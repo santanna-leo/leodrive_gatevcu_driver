@@ -17,6 +17,7 @@ public:
 private:
   void joy_callback(const sensor_msgs::msg::Joy & msg);
   void state_machine_callback();
+  void register_buttons();
 
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
   rclcpp::TimerBase::SharedPtr state_machine_timer_;
@@ -24,6 +25,8 @@ private:
   rclcpp::Publisher<VehicleMsg>::SharedPtr vehicle_pub_;
 
   ButtonHandler button_handler_;
+
+  VehicleMsg vehicle_msg_{};
 };
 
 }  // namespace leodrive_gatevcu_joy
