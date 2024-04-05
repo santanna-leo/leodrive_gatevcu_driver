@@ -51,12 +51,12 @@ void Button::tick()
 
   switch (current_button_state_) {
     case ButtonState::CLICK:
-      on_click_();
+      if (on_click_.has_value()) on_click_->operator()();
       current_button_state_ = ButtonState::IDLE;
       current_press_change_state_ = PressChangeState::IDLE;
       break;
     case ButtonState::HOLD:
-      on_hold_();
+      if (on_hold_.has_value()) on_hold_->operator()();
       current_button_state_ = ButtonState::HOLDING;
       break;
     case ButtonState::IDLE:

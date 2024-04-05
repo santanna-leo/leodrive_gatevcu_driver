@@ -31,8 +31,8 @@ private:
   PressChangeState current_press_change_state_{PressChangeState::IDLE};
   ButtonState current_button_state_{ButtonState::IDLE};
 
-  std::function<void()> on_click_;
-  std::function<void()> on_hold_;
+  std::optional<std::function<void()>> on_click_;
+  std::optional<std::function<void()>> on_hold_;
 };
 
 }  // namespace leodrive_gatevcu_joy
