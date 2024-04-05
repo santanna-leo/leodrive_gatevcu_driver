@@ -53,6 +53,39 @@ void VcuJoyHandler::register_buttons()
   handbrake.on_click([this]() { vehicle_msg_.hand_brake = VehicleMsg::HANDBRAKE_PULL; });
   handbrake.on_hold([this]() { vehicle_msg_.hand_brake = VehicleMsg::HANDBRAKE_RELEASE; });
   button_handler_.add_button(handbrake);
+
+  Button left_blinker{gamepad::LEFT_BUTTON};
+  left_blinker.set_log_fields("left blinker", &vehicle_msg_.blinker);
+  left_blinker.on_click([this]() {
+    if (vehicle_msg_.blinker == VehicleMsg::BLINKER_LEFT)
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_OFF;
+    else {
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_LEFT;
+    }
+  });
+  button_handler_.add_button(left_blinker);
+
+  Button right_blinker{gamepad::RIGHT_BUTTON};
+  right_blinker.set_log_fields("right blinker", &vehicle_msg_.blinker);
+  right_blinker.on_click([this]() {
+    if (vehicle_msg_.blinker == VehicleMsg::BLINKER_RIGHT)
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_OFF;
+    else {
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_RIGHT;
+    }
+  });
+  button_handler_.add_button(right_blinker);
+
+  Button hazard_blinker{gamepad::TRIANGLE_BUTTON};
+  hazard_blinker.set_log_fields("hazard blinker", &vehicle_msg_.blinker);
+  hazard_blinker.on_click([this]() {
+    if (vehicle_msg_.blinker == VehicleMsg::BLINKER_HAZARD)
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_OFF;
+    else {
+      vehicle_msg_.blinker = VehicleMsg ::BLINKER_HAZARD;
+    }
+  });
+  button_handler_.add_button(hazard_blinker);
 }
 
 }  // namespace leodrive_gatevcu_joy
