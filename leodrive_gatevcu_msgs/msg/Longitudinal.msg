@@ -1,3 +1,3 @@
 std_msgs/Header header
-uint16 gas_pedal
-uint16 brake_pedal
+float64 gas_pedal
+float64 brake_pedal

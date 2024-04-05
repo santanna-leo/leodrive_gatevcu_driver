@@ -12,19 +12,25 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
     rclcpp::Rate(100).period(), std::bind(&VcuJoyHandler::state_machine_callback, this));
 
   vehicle_pub_ = create_publisher<VehicleMsg>("vehicle", rclcpp::SensorDataQoS());
+  longitudinal_pub_ = create_publisher<LongitudinalMsg>("longitudinal", rclcpp::SensorDataQoS());
 
   register_buttons();
+  register_axes();
 }
 
 void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
 {
   button_handler_.update(msg);
+  axis_handler_.update(msg);
 }
 
 void VcuJoyHandler::state_machine_callback()
 {
   button_handler_.tick();
+  axis_handler_.tick();
+
   vehicle_pub_->publish(vehicle_msg_);
+  longitudinal_pub_->publish(longitudinal_msg_);
 }
 
 void VcuJoyHandler::register_buttons()
@@ -105,6 +111,16 @@ void VcuJoyHandler::register_buttons()
     }
   });
   button_handler_.add_button(gear_down);
+}
+
+void VcuJoyHandler::register_axes()
+{
+  Axis gas_pedal{gamepad_axis::RIGHT_TRIGGER};
+  gas_pedal.on_update([this](const float & joy_input) {
+    longitudinal_msg_.gas_pedal = mapOneRangeToAnother(joy_input, 1.0, -1.0, 0.0, 100.0, 2);
+    RCLCPP_INFO_STREAM(this->get_logger(), "gas pedal: " << longitudinal_msg_.gas_pedal);
+  });
+  axis_handler_.add_axis(gas_pedal);
 }
 
 }  // namespace leodrive_gatevcu_joy
