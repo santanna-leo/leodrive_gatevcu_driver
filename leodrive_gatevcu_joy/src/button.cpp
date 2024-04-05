@@ -3,10 +3,6 @@
 namespace leodrive_gatevcu_joy
 {
 
-Button::Button(rclcpp::Node & node) : node_{node}
-{
-}
-
 void Button::update_input(const bool & is_pressed)
 {
   switch (current_press_state_) {
@@ -14,7 +10,7 @@ void Button::update_input(const bool & is_pressed)
       if (is_pressed) {
         current_press_state_ = PressState::PRESSING;
         current_press_change_state_ = PressChangeState::PRESSED;
-        press_time_ = node_.now();
+        press_time_ = clock::now();
       }
       break;
     case PressState::PRESSING:
@@ -31,7 +27,7 @@ void Button::tick()
   if (!press_time_.has_value()) return;
 
   if (current_press_state_ == PressState::PRESSING) {
-    const auto delta_time = node_.now() - *press_time_;
+    const auto delta_time = clock::now() - *press_time_;
     if (delta_time > hold_duration && current_button_state_ != ButtonState::HOLDING) {
       current_button_state_ = ButtonState::HOLD;
       current_press_change_state_ = PressChangeState::IDLE;

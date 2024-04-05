@@ -5,20 +5,19 @@
 namespace leodrive_gatevcu_joy
 {
 
+using clock = std::chrono::system_clock;
 constexpr std::chrono::milliseconds hold_duration{200};
 
 class Button
 {
 public:
-  explicit Button(rclcpp::Node & node);
   void update_input(const bool & is_pressed);
   void tick();
   void on_click(const std::function<void()> & function);
   void on_hold(const std::function<void()> & function);
 
 private:
-  rclcpp::Node & node_;
-  std::optional<rclcpp::Time> press_time_;
+  std::optional<std::chrono::time_point<clock>> press_time_;
 
   enum class PressState { NOT_PRESSED, PRESSING };
   enum class PressChangeState { IDLE, PRESSED, RELEASED };
