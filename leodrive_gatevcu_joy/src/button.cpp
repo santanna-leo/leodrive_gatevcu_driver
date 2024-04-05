@@ -3,8 +3,14 @@
 namespace leodrive_gatevcu_joy
 {
 
-void Button::update_input(const bool & is_pressed)
+Button::Button(gamepad gamepad_button) : gamepad_button_(gamepad_button)
 {
+}
+
+void Button::update_input(const sensor_msgs::msg::Joy & joy_msg)
+{
+  const bool is_pressed = joy_msg.buttons[gamepad_button_] > 0;
+
   switch (current_press_state_) {
     case PressState::NOT_PRESSED:
       if (is_pressed) {
