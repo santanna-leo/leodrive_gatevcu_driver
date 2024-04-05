@@ -17,6 +17,7 @@ ament_auto_add_library(vcu_joy_handler SHARED
         src/vcu_joy_handler.cpp
         src/button.cpp
         src/press_detector.cpp
+        src/button_handler.cpp
 )
 
 rclcpp_components_register_node(vcu_joy_handler
