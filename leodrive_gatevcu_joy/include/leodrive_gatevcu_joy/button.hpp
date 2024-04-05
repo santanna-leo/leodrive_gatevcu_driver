@@ -9,7 +9,21 @@ namespace leodrive_gatevcu_joy
 
 using clock = std::chrono::system_clock;
 constexpr std::chrono::milliseconds hold_duration{200};
-enum gamepad { X_BUTTON, CIRCLE_BUTTON, TRIANGLE_BUTTON, SQUARE_BUTTON };
+enum gamepad {
+  X_BUTTON,
+  CIRCLE_BUTTON,
+  TRIANGLE_BUTTON,
+  SQUARE_BUTTON,
+  LEFT_BUTTON,
+  RIGHT_BUTTON,
+  LEFT_TRIGGER,
+  RIGHT_TRIGGER,
+  SHARE_BUTTON,
+  OPTIONS_BUTTON,
+  PS4_BUTTON,
+  LEFT_JOYSTICK_BUTTON,
+  RIGHT_JOYSTICK_BUTTON
+};
 
 class Button
 {

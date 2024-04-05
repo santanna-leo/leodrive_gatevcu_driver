@@ -38,6 +38,17 @@ void VcuJoyHandler::register_buttons()
     RCLCPP_INFO(this->get_logger(), "%s (%s): %d", "X button", "wiper", vehicle_msg_.wiper);
   });
   button_handler_.add_button(wiper);
+
+  Button mode{gamepad::PS4_BUTTON};
+  mode.on_click([this]() {
+    if (vehicle_msg_.mode == VehicleMsg::MODE_OFF)
+      vehicle_msg_.mode = VehicleMsg::MODE_ON;
+    else
+      vehicle_msg_.mode = VehicleMsg::MODE_OFF;
+
+    RCLCPP_INFO(this->get_logger(), "%s (%s): %d", "PS4 button", "mode", vehicle_msg_.mode);
+  });
+  button_handler_.add_button(mode);
 }
 
 }  // namespace leodrive_gatevcu_joy
