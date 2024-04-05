@@ -33,8 +33,14 @@ public:
   void tick();
   void on_click(const std::function<void()> & function);
   void on_hold(const std::function<void()> & function);
+  void set_log_fields(std::string_view field_name, uint8_t * field);
 
 private:
+  void log_status();
+  static std::string button_to_string(gamepad button);
+
+  rclcpp::Logger logger_;
+
   gamepad gamepad_button_;
   std::optional<std::chrono::time_point<clock>> press_time_;
 
@@ -47,6 +53,9 @@ private:
 
   std::optional<std::function<void()>> on_click_;
   std::optional<std::function<void()>> on_hold_;
+
+  std::string field_name_;
+  uint8_t * field_{};
 };
 
 }  // namespace leodrive_gatevcu_joy

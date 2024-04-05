@@ -29,24 +29,22 @@ void VcuJoyHandler::state_machine_callback()
 void VcuJoyHandler::register_buttons()
 {
   Button wiper{gamepad::X_BUTTON};
+  wiper.set_log_fields("wiper", &vehicle_msg_.wiper);
   wiper.on_click([this]() {
     if (vehicle_msg_.wiper == VehicleMsg::WIPER_OFF)
       vehicle_msg_.wiper = VehicleMsg::WIPER_ON;
     else
       vehicle_msg_.wiper = VehicleMsg::WIPER_OFF;
-
-    RCLCPP_INFO(this->get_logger(), "%s (%s): %d", "X button", "wiper", vehicle_msg_.wiper);
   });
   button_handler_.add_button(wiper);
 
   Button mode{gamepad::PS4_BUTTON};
+  mode.set_log_fields("mode", &vehicle_msg_.mode);
   mode.on_click([this]() {
     if (vehicle_msg_.mode == VehicleMsg::MODE_OFF)
       vehicle_msg_.mode = VehicleMsg::MODE_ON;
     else
       vehicle_msg_.mode = VehicleMsg::MODE_OFF;
-
-    RCLCPP_INFO(this->get_logger(), "%s (%s): %d", "PS4 button", "mode", vehicle_msg_.mode);
   });
   button_handler_.add_button(mode);
 }
