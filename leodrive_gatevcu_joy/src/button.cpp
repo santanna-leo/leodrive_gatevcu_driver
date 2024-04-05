@@ -110,9 +110,14 @@ bool Button::check_pressed(const sensor_msgs::msg::Joy & msg)
 
 void Button::log_status()
 {
-  RCLCPP_INFO(
-    logger_, "%s (%s): %d", button_to_string(*gamepad_button_).c_str(), field_name_.c_str(),
-    *field_);
+  if (gamepad_button_.has_value())
+    RCLCPP_INFO(
+      logger_, "%s (%s): %d", button_to_string(*gamepad_button_).c_str(), field_name_.c_str(),
+      *field_);
+  else
+    RCLCPP_INFO(
+      logger_, "%s (%s): %d", button_to_string(*gamepad_axes_button_).c_str(), field_name_.c_str(),
+      *field_);
 }
 std::string Button::button_to_string(gamepad_button button)
 {
@@ -143,6 +148,18 @@ std::string Button::button_to_string(gamepad_button button)
       return "Left Joystick Button";
     case RIGHT_JOYSTICK_BUTTON:
       return "Right Joystick Button";
+    default:
+      return "Unknown Button";
+  }
+}
+
+std::string Button::button_to_string(gamepad_axes_button button)
+{
+  switch (button) {
+    case UP_BUTTON:
+      return "Up Button";
+    case DOWN_BUTTON:
+      return "Down Button";
     default:
       return "Unknown Button";
   }

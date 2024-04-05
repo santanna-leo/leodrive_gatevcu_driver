@@ -43,6 +43,7 @@ private:
   bool check_pressed(const sensor_msgs::msg::Joy & msg);
   void log_status();
   static std::string button_to_string(gamepad_button button);
+  static std::string button_to_string(gamepad_axes_button button);
 
   rclcpp::Logger logger_;
 

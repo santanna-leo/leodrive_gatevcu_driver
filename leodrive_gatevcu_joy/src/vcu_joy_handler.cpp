@@ -86,6 +86,24 @@ void VcuJoyHandler::register_buttons()
     }
   });
   button_handler_.add_button(hazard_blinker);
+
+  Button gear_up{gamepad_axes_button::UP_BUTTON};
+  gear_up.set_log_fields("gear up", &vehicle_msg_.gear);
+  gear_up.on_click([this]() {
+    if (vehicle_msg_.gear < 4) {
+      ++vehicle_msg_.gear;
+    }
+  });
+  button_handler_.add_button(gear_up);
+
+  Button gear_down{gamepad_axes_button::DOWN_BUTTON};
+  gear_down.set_log_fields("gear down", &vehicle_msg_.gear);
+  gear_down.on_click([this]() {
+    if (vehicle_msg_.gear > 1) {
+      --vehicle_msg_.gear;
+    }
+  });
+  button_handler_.add_button(gear_down);
 }
 
 }  // namespace leodrive_gatevcu_joy
