@@ -16,6 +16,7 @@ using SteeringMsg = leodrive_gatevcu_msgs::msg::SteeringWheel;
 
 struct Params
 {
+  long joy_timeout;
   double max_gas_pedal_pos;
   double max_steering_angle;
   long steering_wheel_torque;
@@ -41,6 +42,8 @@ private:
   rclcpp::Publisher<VehicleMsg>::SharedPtr vehicle_pub_;
   rclcpp::Publisher<LongitudinalMsg>::SharedPtr longitudinal_pub_;
   rclcpp::Publisher<SteeringMsg>::SharedPtr steering_pub_;
+
+  std::optional<rclcpp::Time> last_joy_time_;
 
   ButtonHandler button_handler_;
   AxisHandler axis_handler_;

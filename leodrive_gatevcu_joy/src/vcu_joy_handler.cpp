@@ -22,12 +22,14 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
 
 void VcuJoyHandler::get_params()
 {
+  params_.joy_timeout = declare_parameter<long>("joy_timeout");
   params_.max_gas_pedal_pos = declare_parameter<double>("max_gas_pedal_pos");
   params_.max_steering_angle = declare_parameter<double>("max_steering_angle");
   params_.steering_wheel_torque = declare_parameter<long>("steering_wheel_torque");
   params_.enable_ramp = declare_parameter<bool>("enable_ramp");
   params_.steering_rate = declare_parameter<double>("steering_rate", 2.0);
 
+  RCLCPP_INFO_STREAM(get_logger(), "joy_timeout: " << params_.joy_timeout);
   RCLCPP_INFO_STREAM(get_logger(), "max_gas_pedal_pos: " << params_.max_gas_pedal_pos);
   RCLCPP_INFO_STREAM(get_logger(), "max_steering_angle: " << params_.max_steering_angle);
   RCLCPP_INFO_STREAM(get_logger(), "steering_wheel_torque: " << params_.steering_wheel_torque);
@@ -37,12 +39,22 @@ void VcuJoyHandler::get_params()
 
 void VcuJoyHandler::joy_callback(const sensor_msgs::msg::Joy & msg)
 {
+  last_joy_time_ = now();
   button_handler_.update(msg);
   axis_handler_.update(msg);
 }
 
 void VcuJoyHandler::state_machine_callback()
 {
+  if (
+    last_joy_time_.has_value() &&
+    (now() - *last_joy_time_) > rclcpp::Duration(std::chrono::milliseconds(params_.joy_timeout))) {
+    RCLCPP_ERROR_STREAM_THROTTLE(get_logger(), *get_clock(), 1000, "Couldn't receive joy.");
+    vehicle_msg_.mode = 0;
+    vehicle_pub_->publish(vehicle_msg_);
+    return;
+  }
+
   button_handler_.tick();
   axis_handler_.tick();
 
