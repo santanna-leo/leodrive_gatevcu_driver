@@ -1,29 +1,34 @@
 <launch>
-    <node_container pkg="rclcpp_components" exec="component_container" name="joy_to_can_container" namespace="">
-        <!-- Joy Node-->
-        <composable_node pkg="joy" plugin="joy::Joy" name="joy_node">
-            <param name="autorepeat_rate" value="30.0"/>
-        </composable_node>
+    <group>
+        <push-ros-namespace namespace="gatevcu"/>
 
-        <!-- Vcu Joy Handler Node-->
-        <composable_node pkg="leodrive_gatevcu_joy" plugin="leodrive_gatevcu_joy::VcuJoyHandler"
-                         name="vcu_joy_handler_node">
-            <param from="$(find-pkg-share leodrive_gatevcu_driver)/config/driver.yaml"/>
-        </composable_node>
+        <node_container pkg="rclcpp_components" exec="component_container" name="joy_to_can_container" namespace="">
+            <!-- Joy Node-->
+            <composable_node pkg="joy" plugin="joy::Joy" name="joy_node">
+                <param name="autorepeat_rate" value="30.0"/>
+            </composable_node>
 
-        <!-- Vcu Sender Node-->
-        <composable_node pkg="leodrive_gatevcu_adapter" plugin="leodrive_gatevcu_adapter::VcuSender"
-                         name="vcu_sender_node">
-            <!--            <param from="$(find-pkg-share leodrive_gatevcu_driver)/config/joy_to_can.param.yaml"/>-->
-        </composable_node>
-    </node_container>
+            <!-- Vcu Joy Handler Node-->
+            <composable_node pkg="leodrive_gatevcu_joy" plugin="leodrive_gatevcu_joy::VcuJoyHandler"
+                             name="vcu_joy_handler_node">
+                <param from="$(find-pkg-share leodrive_gatevcu_driver)/config/driver.yaml"/>
+            </composable_node>
 
-    <include file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
-        <arg name="interface" value="can1"/>
-        <arg name="receiver_interval_sec" value="0.01"/>
-        <arg name="sender_timeout_sec" value="0.01"/>
-        <arg name="enable_can_fd" value="false"/>
-        <arg name="from_can_bus_topic" value="from_can_bus"/>
-        <arg name="to_can_bus_topic" value="to_can_bus"/>
-    </include>
+            <!-- Vcu Sender Node-->
+            <composable_node pkg="leodrive_gatevcu_adapter" plugin="leodrive_gatevcu_adapter::VcuSender"
+                             name="vcu_sender_node">
+                <!--            <param from="$(find-pkg-share leodrive_gatevcu_driver)/config/joy_to_can.param.yaml"/>-->
+            </composable_node>
+        </node_container>
+
+        <include file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
+            <arg name="interface" value="can1"/>
+            <arg name="receiver_interval_sec" value="0.01"/>
+            <arg name="sender_timeout_sec" value="0.01"/>
+            <arg name="enable_can_fd" value="false"/>
+            <arg name="from_can_bus_topic" value="from_can_bus"/>
+            <arg name="to_can_bus_topic" value="to_can_bus"/>
+        </include>
+
+    </group>
 </launch>
