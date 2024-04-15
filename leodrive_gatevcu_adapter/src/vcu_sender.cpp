@@ -6,7 +6,7 @@ VcuSender::VcuSender(const rclcpp::NodeOptions & options) : Node{"vcu_sender", o
 {
   RCLCPP_INFO_STREAM(get_logger(), "Hello");
 
-  can_frame_pub_ = create_publisher<CanFrame>("/to_can_bus", 500);
+  can_frame_pub_ = create_publisher<CanFrame>("to_can_bus", 500);
 
   steering_sub_ = create_subscription<SteeringMsg>(
     "steering_wheel", rclcpp::SensorDataQoS(),
