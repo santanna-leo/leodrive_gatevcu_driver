@@ -116,9 +116,9 @@ void VcuJoyHandler::register_buttons()
 void VcuJoyHandler::register_axes()
 {
   Axis gas_pedal{gamepad_axis::RIGHT_TRIGGER};
+  gas_pedal.set_log_fields("gas pedal", &longitudinal_msg_.gas_pedal);
   gas_pedal.on_update([this](const float & joy_input) {
     longitudinal_msg_.gas_pedal = mapOneRangeToAnother(joy_input, 1.0, -1.0, 0.0, 100.0, 2);
-    RCLCPP_INFO_STREAM(this->get_logger(), "gas pedal: " << longitudinal_msg_.gas_pedal);
   });
   axis_handler_.add_axis(gas_pedal);
 }

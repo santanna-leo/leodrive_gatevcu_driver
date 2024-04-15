@@ -3,13 +3,11 @@
 namespace leodrive_gatevcu_joy
 {
 
-Button::Button(gamepad_button gamepad_button)
-: logger_{rclcpp::get_logger("button")}, gamepad_button_{gamepad_button}
+Button::Button(gamepad_button gamepad_button) : gamepad_button_{gamepad_button}
 {
 }
 
-Button::Button(gamepad_axes_button gamepad_axes_button)
-: logger_{rclcpp::get_logger("button")}, gamepad_axes_button_{gamepad_axes_button}
+Button::Button(gamepad_axes_button gamepad_axes_button) : gamepad_axes_button_{gamepad_axes_button}
 {
 }
 
@@ -89,8 +87,7 @@ void Button::on_hold(const std::function<void()> & function)
 
 void Button::set_log_fields(std::string_view field_name, uint8_t * field)
 {
-  field_name_ = field_name;
-  field_ = field;
+  logger_.set_log_fields(field_name, field);
 }
 
 bool Button::check_pressed(const sensor_msgs::msg::Joy & msg)
@@ -111,58 +108,9 @@ bool Button::check_pressed(const sensor_msgs::msg::Joy & msg)
 void Button::log_status()
 {
   if (gamepad_button_.has_value())
-    RCLCPP_INFO(
-      logger_, "%s (%s): %d", button_to_string(*gamepad_button_).c_str(), field_name_.c_str(),
-      *field_);
+    logger_.log(*gamepad_button_);
   else
-    RCLCPP_INFO(
-      logger_, "%s (%s): %d", button_to_string(*gamepad_axes_button_).c_str(), field_name_.c_str(),
-      *field_);
-}
-std::string Button::button_to_string(gamepad_button button)
-{
-  switch (button) {
-    case X_BUTTON:
-      return "X Button";
-    case CIRCLE_BUTTON:
-      return "Circle Button";
-    case TRIANGLE_BUTTON:
-      return "Triangle Button";
-    case SQUARE_BUTTON:
-      return "Square Button";
-    case LEFT_BUTTON:
-      return "Left Button";
-    case RIGHT_BUTTON:
-      return "Right Button";
-    case LEFT_TRIGGER_BUTTON:
-      return "Left Trigger Button";
-    case RIGHT_TRIGGER_BUTTON:
-      return "Right Trigger Button";
-    case SHARE_BUTTON:
-      return "Share Button";
-    case OPTIONS_BUTTON:
-      return "Options Button";
-    case PS4_BUTTON:
-      return "PS4 Button";
-    case LEFT_JOYSTICK_BUTTON:
-      return "Left Joystick Button";
-    case RIGHT_JOYSTICK_BUTTON:
-      return "Right Joystick Button";
-    default:
-      return "Unknown Button";
-  }
-}
-
-std::string Button::button_to_string(gamepad_axes_button button)
-{
-  switch (button) {
-    case UP_BUTTON:
-      return "Up Button";
-    case DOWN_BUTTON:
-      return "Down Button";
-    default:
-      return "Unknown Button";
-  }
+    logger_.log(*gamepad_axes_button_);
 }
 
 }  // namespace leodrive_gatevcu_joy

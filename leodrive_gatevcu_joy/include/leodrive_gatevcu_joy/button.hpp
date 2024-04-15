@@ -1,5 +1,7 @@
 #pragma once
 
+#include "leodrive_gatevcu_joy/button_types.hpp"
+#include "leodrive_gatevcu_joy/logger.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include "sensor_msgs/msg/joy.hpp"
@@ -9,24 +11,6 @@ namespace leodrive_gatevcu_joy
 
 using clock = std::chrono::system_clock;
 constexpr std::chrono::milliseconds hold_duration{200};
-
-enum gamepad_button {
-  X_BUTTON,
-  CIRCLE_BUTTON,
-  TRIANGLE_BUTTON,
-  SQUARE_BUTTON,
-  LEFT_BUTTON,
-  RIGHT_BUTTON,
-  LEFT_TRIGGER_BUTTON,
-  RIGHT_TRIGGER_BUTTON,
-  SHARE_BUTTON,
-  OPTIONS_BUTTON,
-  PS4_BUTTON,
-  LEFT_JOYSTICK_BUTTON,
-  RIGHT_JOYSTICK_BUTTON
-};
-
-enum gamepad_axes_button { UP_BUTTON, DOWN_BUTTON };
 
 class Button
 {
@@ -42,10 +26,8 @@ public:
 private:
   bool check_pressed(const sensor_msgs::msg::Joy & msg);
   void log_status();
-  static std::string button_to_string(gamepad_button button);
-  static std::string button_to_string(gamepad_axes_button button);
 
-  rclcpp::Logger logger_;
+  Logger<uint8_t> logger_;
 
   std::optional<gamepad_button> gamepad_button_;
   std::optional<gamepad_axes_button> gamepad_axes_button_;
