@@ -8,6 +8,7 @@
         <!-- Vcu Joy Handler Node-->
         <composable_node pkg="leodrive_gatevcu_joy" plugin="leodrive_gatevcu_joy::VcuJoyHandler"
                          name="vcu_joy_handler_node">
+            <param from="$(find-pkg-share leodrive_gatevcu_driver)/config/driver.yaml"/>
         </composable_node>
 
         <!-- Vcu Sender Node-->

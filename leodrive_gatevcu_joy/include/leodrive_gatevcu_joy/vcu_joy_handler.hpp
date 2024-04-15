@@ -14,12 +14,22 @@ using VehicleMsg = leodrive_gatevcu_msgs::msg::Vehicle;
 using LongitudinalMsg = leodrive_gatevcu_msgs::msg::Longitudinal;
 using SteeringMsg = leodrive_gatevcu_msgs::msg::SteeringWheel;
 
+struct Params
+{
+  double max_gas_pedal_pos;
+  double max_steering_angle;
+  long steering_wheel_torque;
+  bool enable_ramp;
+  double steering_rate;
+};
+
 class VcuJoyHandler : public rclcpp::Node
 {
 public:
   explicit VcuJoyHandler(const rclcpp::NodeOptions & options);
 
 private:
+  void get_params();
   void joy_callback(const sensor_msgs::msg::Joy & msg);
   void state_machine_callback();
   void register_buttons();
@@ -41,6 +51,8 @@ private:
 
   double target_steering_angle_{};
   double set_steering_angle_{};
+
+  Params params_;
 };
 
 }  // namespace leodrive_gatevcu_joy
