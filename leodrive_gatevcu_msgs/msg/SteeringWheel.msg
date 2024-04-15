@@ -1,3 +1,3 @@
 std_msgs/Header header
-int16 angle
+float64 angle
 uint8 torque

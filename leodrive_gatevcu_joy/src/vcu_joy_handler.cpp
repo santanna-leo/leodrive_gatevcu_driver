@@ -13,6 +13,7 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
 
   vehicle_pub_ = create_publisher<VehicleMsg>("vehicle", rclcpp::SensorDataQoS());
   longitudinal_pub_ = create_publisher<LongitudinalMsg>("longitudinal", rclcpp::SensorDataQoS());
+  steering_pub_ = create_publisher<SteeringMsg>("steering_wheel", rclcpp::SensorDataQoS());
 
   register_buttons();
   register_axes();
@@ -31,6 +32,7 @@ void VcuJoyHandler::state_machine_callback()
 
   vehicle_pub_->publish(vehicle_msg_);
   longitudinal_pub_->publish(longitudinal_msg_);
+  steering_pub_->publish(steering_msg_);
 }
 
 void VcuJoyHandler::register_buttons()
@@ -130,6 +132,32 @@ void VcuJoyHandler::register_axes()
     longitudinal_msg_.brake_pedal = static_cast<uint16_t>(mapped_gas_pedal_pos);
   });
   axis_handler_.add_axis(brake_pedal);
+
+  Axis steering{gamepad_axis::LEFT_JOYSTICK_HORIZONTAL};
+  steering.set_log_fields("steering angle", &steering_msg_.angle);
+  steering.on_update([this](const float & joy_input) {
+    target_steering_angle_ = mapOneRangeToAnother(joy_input, 1.0, -1.0, -475.0, 475.0, 2);
+    // steering_msg_.angle = target_steering_angle_;
+    steering_msg_.torque = 255;
+  });
+  steering.on_tick([this]() {
+    const auto diff = std::abs(set_steering_angle_ - target_steering_angle_);
+    if (diff < 2.0) {
+      if (set_steering_angle_ < target_steering_angle_) {
+        set_steering_angle_ += diff;
+      } else if (set_steering_angle_ > target_steering_angle_) {
+        set_steering_angle_ -= 2.0;
+      }
+
+    } else if (set_steering_angle_ < target_steering_angle_) {
+      set_steering_angle_ += 2.0;
+    } else if (set_steering_angle_ > target_steering_angle_) {
+      set_steering_angle_ -= 2.0;
+    }
+
+    steering_msg_.angle = set_steering_angle_;
+  });
+  axis_handler_.add_axis(steering);
 }
 
 }  // namespace leodrive_gatevcu_joy
