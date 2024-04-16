@@ -16,6 +16,8 @@ VcuJoyHandler::VcuJoyHandler(const rclcpp::NodeOptions & options) : Node{"vcu_se
   longitudinal_pub_ = create_publisher<LongitudinalMsg>("longitudinal", rclcpp::SensorDataQoS());
   steering_pub_ = create_publisher<SteeringMsg>("steering_wheel", rclcpp::SensorDataQoS());
 
+  vehicle_msg_.gear = 1;
+
   register_buttons();
   register_axes();
 }
@@ -125,22 +127,27 @@ void VcuJoyHandler::register_buttons()
   button_handler_.add_button(hazard_blinker);
 
   Button gear_up{gamepad_axes_button::UP_BUTTON};
-  gear_up.set_log_fields("gear up", &vehicle_msg_.gear);
+  gear_up.set_log_fields("gear change", &vehicle_msg_.gear);
   gear_up.on_click([this]() {
-    if (vehicle_msg_.gear < 4) {
-      ++vehicle_msg_.gear;
+    if (vehicle_msg_.gear > 2) {
+      --vehicle_msg_.gear;
     }
   });
   button_handler_.add_button(gear_up);
 
   Button gear_down{gamepad_axes_button::DOWN_BUTTON};
-  gear_down.set_log_fields("gear down", &vehicle_msg_.gear);
+  gear_down.set_log_fields("gear change", &vehicle_msg_.gear);
   gear_down.on_click([this]() {
-    if (vehicle_msg_.gear > 1) {
-      --vehicle_msg_.gear;
+    if (vehicle_msg_.gear < 4) {
+      ++vehicle_msg_.gear;
     }
   });
   button_handler_.add_button(gear_down);
+
+  Button gear_park{gamepad_button::SHARE_BUTTON};
+  gear_park.set_log_fields("gear park", &vehicle_msg_.gear);
+  gear_park.on_click([this]() { vehicle_msg_.gear = 1; });
+  button_handler_.add_button(gear_park);
 }
 
 void VcuJoyHandler::register_axes()
