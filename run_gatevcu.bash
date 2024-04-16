@@ -2,13 +2,15 @@
 
 # Help message function
 print_help() {
-    echo "Usage: $0 [INTERFACE] [BITRATE] [LAUNCH_JOY]"
-    echo "Activate a CAN interface with optional INTERFACE name and BITRATE."
-    echo "If INTERFACE and BITRATE are not provided, defaults to 'can0' and '500000' respectively."
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Activate a CAN interface and launch a ROS 2 command."
+    echo ""
     echo "Options:"
-    echo "  INTERFACE  Name of the CAN interface (default: can0)"
-    echo "  BITRATE    Bitrate of the CAN interface (default: 500000)"
-    echo "  LAUNCH_JOY Whether to launch joy stack or not (default: true)"
+    echo "  -h, --help            Show this help message and exit"
+    echo "  -i, --interface       Name of the CAN interface (default: can0)"
+    echo "  -b, --bitrate         Bitrate of the CAN interface (default: 500000)"
+    echo "  -j, --launch-joy      Whether to launch joy stack or not (default: true)"
     echo ""
     echo "After setting up the network interface, this script searches for the 'setup.bash' script"
     echo "in parent directories recursively. Once found, it sources the 'setup.bash' script and"
@@ -16,28 +18,37 @@ print_help() {
     exit 0
 }
 
-# Check if help flag is provided
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    print_help
-fi
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+            print_help
+            ;;
+        -i|--interface)
+            interface="$2"
+            shift
+            ;;
+        -b|--bitrate)
+            bitrate="$2"
+            shift
+            ;;
+        -j|--launch-joy)
+            launch_joy="$2"
+            shift
+            ;;
+        *)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+    esac
+    shift
+done
 
 # Default values
-interface="can0"
-bitrate="500000"
-launch_joy="true"
-
-# Check if interface and bitrate are specified as arguments
-if [ $# -ge 1 ]; then
-    interface="$1"
-fi
-
-if [ $# -ge 2 ]; then
-    bitrate="$2"
-fi
-
-if [ $# -ge 3 ]; then
-    launch_joy="$3"
-fi
+interface="${interface:-can0}"
+bitrate="${bitrate:-500000}"
+launch_joy="${launch_joy:-true}"
 
 # Check if the specified interface exists
 if ! ip link show "$interface" &>/dev/null; then
