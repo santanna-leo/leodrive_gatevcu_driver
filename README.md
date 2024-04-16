@@ -6,6 +6,7 @@ This is a ROS 2 driver for the gatevcu.
 * [Leo Drive Gatevcu Driver](#leo-drive-gatevcu-driver)
   * [How to build](#how-to-build)
   * [How to launch](#how-to-launch)
+  * [How to configure](#how-to-configure)
   * [How to use ROS 2 API](#how-to-use-ros-2-api)
   * [How to control via gamepad](#how-to-control-via-gamepad)
 <!-- TOC -->
@@ -73,6 +74,20 @@ launches the 'ros2 launch leodrive_gatevcu_driver driver.launch.xml' command.
 
 If you want to control the vehicle via gamepad, `launch-joy` must be enabled which is the default.
 If you want to control the vehicle via publishing command messages to corresponding ROS 2 topics, you may disable it.
+
+## How to configure
+
+There is a config file inside the `config` directory of the  `leodrive_gatevcu_driver` package. These parameters are
+only used for gamepad.
+
+| Parameter             | Description                                             | Default |
+|-----------------------|---------------------------------------------------------|---------|
+| joy_timeout           | The duration to assume gamepad was lost in milliseconds | 100     |
+| max_gas_pedal_pos     | Maximum value of the gas pedal.                         | 100.0   |
+| max_steering_angle    | Maximum value of the steering angle.                    | 475.0   |
+| steering_wheel_torque | Torque of the steering wheel.                           | 255     |
+| enable_ramp           | Whether to enable smooth steering.                      | true    |
+| steering_rate         | Steering change rate for smooth steering.               | 2.0     |
 
 ## How to use ROS 2 API
 
