@@ -10,7 +10,7 @@ namespace leodrive_gatevcu_joy
 {
 
 using clock = std::chrono::system_clock;
-constexpr std::chrono::milliseconds hold_duration{200};
+constexpr std::chrono::milliseconds hold_duration{330};
 
 class Button
 {
