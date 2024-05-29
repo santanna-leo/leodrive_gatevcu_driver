@@ -4,5 +4,5 @@
     max_gas_pedal_pos: 100.0
     max_steering_angle: 475.0
     steering_wheel_torque: 255
-    enable_ramp: true
+    enable_ramp: false
     steering_rate: 2.0
