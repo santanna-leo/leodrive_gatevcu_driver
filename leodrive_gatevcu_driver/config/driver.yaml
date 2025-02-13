@@ -2,7 +2,7 @@
   ros__parameters:
     joy_timeout: 100 # milliseconds
     max_gas_pedal_pos: 100.0
-    max_steering_angle: 475.0
-    steering_wheel_torque: 255
+    max_steering_angle: 425.0
+    steering_wheel_torque: 50
     enable_ramp: false
     steering_rate: 2.0
