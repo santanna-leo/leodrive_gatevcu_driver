@@ -24,9 +24,9 @@ mkdir -p gatevcu_ws/src
 cd gatevcu_ws/src
 
 # Clone the repo
-git clone https://github.com/leo-drive/leodrive_gatevcu_driver.git
+git clone https://github.com/santanna-leo/leodrive_gatevcu_driver.git
 # or (depends on your GitHub authentication method)
-git clone git@github.com:leo-drive/leodrive_gatevcu_driver.git
+git clone git@github.com:santanna-leo/leodrive_gatevcu_driver.git
 
 # Go to the workspace root directory
 cd ..
